@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, SecretBytes
 
 
 class UserBase(BaseModel):
@@ -16,4 +16,4 @@ class UserCreate(UserBase):
 
 
 class User(UserCreate, UserBaseInDB):
-    pass
+    password: SecretBytes
