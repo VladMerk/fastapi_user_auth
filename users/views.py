@@ -10,7 +10,7 @@ from core.database import db
 from core.settings import settings
 from users.models import Users
 from users.schemas import User, UserCreate
-from users.security import get_current_user
+from users.security import get_current_user, get_current_active_user
 from users.service import db_users
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -33,7 +33,11 @@ async def create_user(user_in: UserCreate, session: Session = Depends(db.session
 
 
 @router.delete("/{user_id}", response_model=User)
-async def delete_user(user_id: int = Path(...), session: Session = Depends(db.session_dependency)) -> User:
+async def delete_user(
+    user_id: int = Path(...),
+    session: Session = Depends(db.session_dependency),
+    user: Users = Depends(get_current_active_user),
+) -> User:
     return await db_users.remove(session=session, model_id=user_id)
 
 

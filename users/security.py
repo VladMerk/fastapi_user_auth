@@ -22,3 +22,9 @@ async def get_current_user(
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
     return user
+
+
+async def get_current_active_user(user: Users = Depends(get_current_user)):
+    if user.is_active:
+        return user
+    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User inactive or deleted.")
